@@ -2,7 +2,7 @@
 
 "朝为田舍郎，暮登天子堂" —— 掷骰行棋，自从九品竞登正一品·太师，先至者胜。
 
-🎮 **[在线游玩](https://wanfw.github.io/shengguantu-game/)**
+🎮 **[在线游玩](https://wanfw.github.io/shengguantu/)**
 
 ## 玩法简介
 
