@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>大宋升官图 · 升官竞速棋</title>
+<link rel="stylesheet" href="src/styles/standalone.css">
+<link rel="stylesheet" href="src/shengguantu/shengguantu.css">
+</head>
+<body>
+
+<!-- 水墨背景层 -->
+<div class="shuimo-bg"></div>
+<div class="ink-bg">
+  <svg class="mountain-far" viewBox="0 0 1200 400" preserveAspectRatio="none">
+    <path d="M0,400 L0,280 Q150,180 280,240 T520,200 Q680,140 820,220 T1080,180 L1200,240 L1200,400 Z" fill="#c9c0b3" opacity="0.35"/>
+  </svg>
+  <svg class="mountain-mid" viewBox="0 0 1200 400" preserveAspectRatio="none">
+    <path d="M0,400 L0,320 Q200,240 360,290 T620,260 Q780,200 950,280 T1200,260 L1200,400 Z" fill="#8a8275" opacity="0.5"/>
+  </svg>
+</div>
+
+<div class="sgt-app">
+
+  <!-- 顶栏 -->
+  <div class="sgt-topbar">
+    <h1><span class="sgt-seal">宋</span>大宋升官图</h1>
+    <span class="sgt-sub">掷骰升官 · 先至太师者胜</span>
+  </div>
+
+  <!-- 开局设置 -->
+  <div class="sgt-setup" id="sgtSetup">
+    <h2>— 开 局 设 局 —</h2>
+    <div class="sgt-setup-poem">"朝为田舍郎，暮登天子堂。"　自从九品起步，竞登正一品·太师。</div>
+
+    <div class="sgt-intro-btns">
+      <button class="brush-btn ghost" onclick="sgtOpenSheet('sgtRules')">📜 玩 法 规 则</button>
+      <button class="brush-btn ghost" onclick="sgtOpenSheet('sgtCulture')">🏛 升 官 图 文 化</button>
+    </div>
+
+    <div class="sgt-setup-row">
+      <label class="sgt-row-title">对战模式</label>
+      <div class="sgt-count-opts sgt-mode-opts">
+        <label><input type="radio" name="sgtMode" value="free" checked><span>自由对战</span></label>
+        <label><input type="radio" name="sgtMode" value="team"><span>两两组队 2v2</span></label>
+      </div>
+    </div>
+
+    <!-- 自由对战 -->
+    <div id="sgtFreeBox">
+      <div class="sgt-setup-row">
+        <label class="sgt-row-title">对局人数</label>
+        <div class="sgt-count-opts">
+          <label><input type="radio" name="sgtCount" value="1"><span>1 人</span></label>
+          <label><input type="radio" name="sgtCount" value="2" checked><span>2 人</span></label>
+          <label><input type="radio" name="sgtCount" value="3"><span>3 人</span></label>
+          <label><input type="radio" name="sgtCount" value="4"><span>4 人</span></label>
+        </div>
+      </div>
+      <div class="sgt-setup-row">
+        <label class="sgt-row-title">其余诸位 · 托管或手动</label>
+        <div id="sgtModeRows"></div>
+      </div>
+    </div>
+
+    <!-- 2v2 组队 -->
+    <div id="sgtTeamBox" class="hidden">
+      <div class="sgt-setup-row">
+        <label class="sgt-row-title">真人席位</label>
+        <div class="sgt-count-opts">
+          <label><input type="radio" name="sgtTeamHumans" value="1" checked><span>1 真人 · 3 托管</span></label>
+          <label><input type="radio" name="sgtTeamHumans" value="2"><span>2 真人 · 2 托管</span></label>
+        </div>
+      </div>
+      <div class="sgt-team-note">
+        <p><span class="sgt-team-tag team-0">甲</span> 你（朱红）＋ 队友（墨绿）　vs　<span class="sgt-team-tag team-1">乙</span> 对手（靛蓝 / 赭石）</p>
+        <p class="sgt-team-hint">· 1 真人：队友为托管，但其每回合<b>由你手动决定是否使用道具</b>，移动由 AI 代行。</p>
+        <p class="sgt-team-hint">· 2 真人：你与队友各自手动行棋。<b>队友登太师即全队同胜。</b></p>
+      </div>
+    </div>
+
+    <div class="sgt-setup-btns">
+      <button class="brush-btn" onclick="sgtStartGame()">入 局 行 棋</button>
+    </div>
+  </div>
+
+  <!-- 对局界面 -->
+  <div class="sgt-play hidden" id="sgtPlay">
+    <div class="sgt-board-wrap">
+      <div class="sgt-grid" id="sgtGrid"></div>
+    </div>
+    <div class="sgt-side">
+      <div class="sgt-panel">
+        <div class="sgt-turn-banner" id="sgtTurnBanner"></div>
+        <div class="sgt-controls" id="sgtControls"></div>
+      </div>
+      <div class="sgt-panel">
+        <h3>仕 途 榜</h3>
+        <div id="sgtStandings"></div>
+      </div>
+      <div class="sgt-panel">
+        <h3>邸 报</h3>
+        <div class="sgt-log" id="sgtLog"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- toast -->
+<div class="sgt-toast" id="sgtToast"></div>
+
+<!-- 胜利浮层 -->
+<div class="sgt-victory hidden" id="sgtVictory">
+  <div class="sgt-vic-scroll">
+    <div class="sgt-vic-seal">太师</div>
+    <h2>位 极 人 臣</h2>
+    <div class="sgt-vic-name" id="sgtVicName"></div>
+    <div class="sgt-vic-list" id="sgtVicList"></div>
+    <div class="sgt-vic-btns">
+      <button class="brush-btn" onclick="sgtRestart()">再开一局</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 玩法规则 说明书 ============ -->
+<div class="sgt-sheet hidden" id="sgtRules">
+  <div class="sgt-sheet-scroll">
+    <button class="sgt-sheet-x" onclick="sgtCloseSheet('sgtRules')">✕</button>
+    <div class="sgt-sheet-seal">规</div>
+    <h2 class="sgt-sheet-title">大宋升官图 · 玩法规则</h2>
+    <p class="sgt-sheet-lead">"朝为田舍郎，暮登天子堂"——掷骰行棋，自从九品竞登正一品·太师，先至者胜。</p>
+
+    <div class="sgt-rule-grid">
+      <section class="sgt-rule-card">
+        <h3><span class="sgt-rule-no">一</span>目标</h3>
+        <p>众人皆自起点 <b>从九品·太常寺奉礼郎</b> 出发，沿三环回字盘竞速。<b>最先抵达终点正一品·太师</b>者，位极人臣，对局即胜。</p>
+      </section>
+      <section class="sgt-rule-card">
+        <h3><span class="sgt-rule-no">二</span>行棋</h3>
+        <p>轮流掷一枚骰子（1–6 点），按点数沿盘面前进。落于何格，即结算该格事件。点击任意格子可<b>预览其内容与效果</b>。</p>
+      </section>
+      <section class="sgt-rule-card">
+        <h3><span class="sgt-rule-no">三</span>格子</h3>
+        <p><b class="r-office">官职格</b>锚定品阶（绿/绯/紫三章服）；<b>事件格</b>有进 N / 退 N / 升 N 阶 / 降 N 阶 / 困住 / <b>原位</b>驻留等；<b class="r-fortune">奇遇格</b>（金）天降际遇；<b class="r-rebel">谋反格</b>回起点但赠弹劾令 ×2。</p>
+      </section>
+      <section class="sgt-rule-card">
+        <h3><span class="sgt-rule-no">四</span>品阶</h3>
+        <p>当前官职由<b>所在或其后最近的官职格</b>推导。"升 N 阶"＝跳至前方第 N 个官职格，"降 N 阶"反之。单回合连升至多 3 阶。</p>
+      </section>
+      <section class="sgt-rule-card">
+        <h3><span class="sgt-rule-no">五</span>道具</h3>
+        <p><b class="r-tok">弹劾令</b>：掷骰前用，使一名对手降一品阶。<b class="r-ban">禁足令</b>：使一名对手下一回合不得掷骰。每人同时<b>最多持有 3 件</b>，对队友无效。</p>
+      </section>
+      <section class="sgt-rule-card">
+        <h3><span class="sgt-rule-no">六</span>钱财·商肆</h3>
+        <p>每次升官获<b>钱财</b>（品阶越高越多），降官则相应扣减、下限为零。掷骰前可入<b>商肆</b>购弹劾令（600 缗）/ 禁足令（450 缗）；<b>一局至多购 3 件</b>，约中等品阶方买得起。</p>
+      </section>
+      <section class="sgt-rule-card">
+        <h3><span class="sgt-rule-no">七</span>连锁与上限</h3>
+        <p>因进退而落入新事件格会<b>连锁触发</b>（至多 2 次）。降职以从九品为底、连升以 3 阶为顶，盘势不致失衡。</p>
+      </section>
+      <section class="sgt-rule-card">
+        <h3><span class="sgt-rule-no">八</span>对战模式</h3>
+        <p><b>自由对战</b>：1–4 人，余席可 AI 托管。<b>2v2 组队</b>：甲乙两队交错行棋，<b>同队同色</b>仅棋子字不同；任一队员登顶<b>全队同胜</b>。</p>
+      </section>
+    </div>
+
+    <div class="sgt-sheet-foot">
+      <button class="brush-btn" onclick="sgtCloseSheet('sgtRules')">收 起 卷 轴</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 升官图文化 ============ -->
+<div class="sgt-sheet hidden" id="sgtCulture">
+  <div class="sgt-sheet-scroll">
+    <button class="sgt-sheet-x" onclick="sgtCloseSheet('sgtCulture')">✕</button>
+    <div class="sgt-sheet-seal seal-culture">文</div>
+    <h2 class="sgt-sheet-title">升官图 · 千年源流</h2>
+    <p class="sgt-sheet-lead">一枚博具，半部官制——升官图以游戏摹写宦海浮沉，自唐迄今，雅俗共赏。</p>
+
+    <div class="sgt-timeline">
+
+      <div class="sgt-era">
+        <div class="sgt-era-tag">唐 · 源</div>
+        <div class="sgt-era-body">
+          <h3>彩选格 · 博戏滥觞</h3>
+          <p>升官图的远祖，是唐代盛行的「<b>彩选格</b>」（又称<b>选官图</b>、彩选）。"彩"即掷具所得之采（点数），玩者依采在图上<b>选格升黜</b>，故名"彩选"。李肇《唐国史补》已记"骰子选"之戏；其图自卑秩起，循采递迁，初具"以游戏摹官阶"的雏形。<span class="sgt-note">（创制者后世多有附会，姑且存疑。）</span></p>
+        </div>
+      </div>
+
+      <div class="sgt-era">
+        <div class="sgt-era-tag">宋元 · 流</div>
+        <div class="sgt-era-body">
+          <h3>士林雅玩 · 寓劝于戏</h3>
+          <p>两宋承唐余绪，彩选之戏流行于士大夫间，常见于宴集清谈。文人嫌其专取<b>富贵荣华</b>、逐利忘德，遂有改制之议——主张<b>重德行、抑贪墨</b>，使升黜系于品节而非侥幸，"寓劝惩于博弈"。元代承之，规制渐繁。</p>
+        </div>
+      </div>
+
+      <div class="sgt-era">
+        <div class="sgt-era-tag">明 · 定</div>
+        <div class="sgt-era-body">
+          <h3>升官图定型 · 德才功赃</h3>
+          <p>至明代，此戏定名「<b>升官图</b>」（亦称百官图、选官图），体例大成。掷具多用一枚四面之"<b>琼</b>"或捻转之陀螺，四面刻 <b class="r-good">德 · 才 · 功</b> 与 <b class="r-bad">赃</b>：得德才功则擢升，遇"赃"则<b>贬黜、罚俸乃至削籍</b>。棋盘自<b>白丁</b>经科举（秀才—举人—进士—状元）入仕，历部院台谏、地方藩臬，直抵<b>三公太师</b>，封爵荫子。明末士人亦多以之自况官场炎凉。</p>
+        </div>
+      </div>
+
+      <div class="sgt-era">
+        <div class="sgt-era-tag">清 · 盛</div>
+        <div class="sgt-era-body">
+          <h3>合家博戏 · 年节之欢</h3>
+          <p>有清一代，升官图臻于鼎盛，由士人雅玩走入<b>寻常巷陌</b>，成为<b>春节、元宵</b>合家围坐的博戏。坊间刊印图样、配以四面"升官桶"骰，老幼皆可对局；孩童于嬉戏间<b>熟习官制品级</b>，长者借升黜无常<b>笑谈宦海</b>，可谓寓教、娱乐、讽喻三得。</p>
+        </div>
+      </div>
+
+      <div class="sgt-era">
+        <div class="sgt-era-tag">今 · 韵</div>
+        <div class="sgt-era-body">
+          <h3>民俗遗韵 · 古戏新声</h3>
+          <p>科举既废、官制更易，升官图退为<b>民俗文化遗存</b>，却以其"<b>掷骰竞官、升黜无常</b>"的巧思与谐趣，长存于年画、收藏与桌游之中，被视作中国古代<b>讽喻性桌游</b>的代表。</p>
+        </div>
+      </div>
+
+      <div class="sgt-era sgt-era-origin">
+        <div class="sgt-era-tag">本作 · 承</div>
+        <div class="sgt-era-body">
+          <h3>《大宋升官图》· 旧戏新裁</h3>
+          <p>本作取升官图"<b>掷骰竞官</b>"之核心与"<b>升黜无常</b>"之讽喻精神，落点<b>北宋官制</b>（寄禄官阶与职事官），自从九品·太常寺奉礼郎竞登正一品·太师；并重制为<b>三环回字盘</b>，增益事件、奇遇、谋反与<b>弹劾令 / 禁足令 / 商肆钱财</b>诸般机巧，使千年古戏，复见水墨新颜。</p>
+        </div>
+      </div>
+
+    </div>
+
+    <p class="sgt-sheet-cite">参酌：唐·李肇《唐国史补》"骰子选"；历代升官图（彩选格）民俗博戏流变。文中创制人物与年代细节，民间记载互见，部分姑从其略。</p>
+    <div class="sgt-sheet-foot">
+      <button class="brush-btn" onclick="sgtCloseSheet('sgtCulture')">收 起 卷 轴</button>
+    </div>
+  </div>
+</div>
+
+<script src="src/shengguantu/shengguantu.js"></script>
+</body>
+</html>
