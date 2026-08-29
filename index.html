@@ -4,12 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>大宋升官图 · 升官竞速棋</title>
-<link rel="stylesheet" href="src/styles/standalone.css">
-<link rel="stylesheet" href="src/shengguantu/shengguantu.css">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<!-- 水墨基础样式（:root 变量 / 宣纸底 / 字体 / .brush-btn / .hidden） -->
+<link rel="stylesheet" href="src/styles/main.css?v=20260829">
+<link rel="stylesheet" href="src/shengguantu/shengguantu.css?v=20260829">
 </head>
 <body>
 
-<!-- 水墨背景层 -->
+<!-- 主作同款水墨背景层 -->
 <div class="shuimo-bg"></div>
 <div class="ink-bg">
   <svg class="mountain-far" viewBox="0 0 1200 400" preserveAspectRatio="none">
@@ -25,19 +27,24 @@
   <!-- 顶栏 -->
   <div class="sgt-topbar">
     <h1><span class="sgt-seal">宋</span>大宋升官图</h1>
-    <span class="sgt-sub">掷骰升官 · 先至太师者胜</span>
+    <span class="sgt-sub">掷骰升官 · 先至太师者胜　|　水墨风升官竞速棋</span>
+    <div class="sgt-topbar-btns">
+      <button class="brush-btn ghost sgt-set-btn" onclick="sgtOpenSettings()" aria-label="设置" title="设置（音乐 / 音效）"><span class="sgt-set-gear">♪</span><span class="sgt-set-label">设 置</span></button>
+    </div>
   </div>
 
   <!-- 开局设置 -->
   <div class="sgt-setup" id="sgtSetup">
-    <h2>— 开 局 设 局 —</h2>
+    <h2>— 开 局 设 置 —</h2>
     <div class="sgt-setup-poem">"朝为田舍郎，暮登天子堂。"　自从九品起步，竞登正一品·太师。</div>
 
     <div class="sgt-intro-btns">
       <button class="brush-btn ghost" onclick="sgtOpenSheet('sgtRules')">📜 玩 法 规 则</button>
       <button class="brush-btn ghost" onclick="sgtOpenSheet('sgtCulture')">🏛 升 官 图 文 化</button>
+      <button class="brush-btn ghost" onclick="sgtStartGuide()">🧭 游 戏 引 导</button>
     </div>
 
+    <div id="sgtOfflineBox">
     <div class="sgt-setup-row">
       <label class="sgt-row-title">对战模式</label>
       <div class="sgt-count-opts sgt-mode-opts">
@@ -82,6 +89,7 @@
     <div class="sgt-setup-btns">
       <button class="brush-btn" onclick="sgtStartGame()">入 局 行 棋</button>
     </div>
+    </div><!-- /sgtOfflineBox -->
   </div>
 
   <!-- 对局界面 -->
@@ -90,12 +98,17 @@
       <div class="sgt-grid" id="sgtGrid"></div>
     </div>
     <div class="sgt-side">
+      <!-- 手机端事件面板：棋盘中央区太小、长事件描述会被裁切，故在此完整呈现（桌面端隐藏） -->
+      <div class="sgt-panel sgt-event-panel" id="sgtEventPanel">
+        <h3>当 前 事 件</h3>
+        <div class="sgt-event-echo" id="sgtEventEcho"><span class="sgt-echo-empty">— 掷骰后，本格事件描述将在此完整显示 —</span></div>
+      </div>
       <div class="sgt-panel">
         <div class="sgt-turn-banner" id="sgtTurnBanner"></div>
         <div class="sgt-controls" id="sgtControls"></div>
       </div>
       <div class="sgt-panel">
-        <h3>仕 途 榜</h3>
+        <h3 class="sgt-panel-title-row"><span>仕 途 榜</span></h3>
         <div id="sgtStandings"></div>
       </div>
       <div class="sgt-panel">
@@ -113,8 +126,9 @@
 <!-- 胜利浮层 -->
 <div class="sgt-victory hidden" id="sgtVictory">
   <div class="sgt-vic-scroll">
-    <div class="sgt-vic-seal">太师</div>
-    <h2>位 极 人 臣</h2>
+    <div class="sgt-vic-seal" id="sgtVicSeal">太师</div>
+    <h2 id="sgtVicTitle">位 极 人 臣</h2>
+    <div class="sgt-vic-sub" id="sgtVicSub"></div>
     <div class="sgt-vic-name" id="sgtVicName"></div>
     <div class="sgt-vic-list" id="sgtVicList"></div>
     <div class="sgt-vic-btns">
@@ -131,18 +145,23 @@
     <h2 class="sgt-sheet-title">大宋升官图 · 玩法规则</h2>
     <p class="sgt-sheet-lead">"朝为田舍郎，暮登天子堂"——掷骰行棋，自从九品竞登正一品·太师，先至者胜。</p>
 
+    <section class="sgt-rule-card sgt-rule-simple">
+      <h3><span class="sgt-rule-no">简</span>简单版</h3>
+      <p>每位玩家以<b>从九品小官</b>起步，轮流掷骰前进，落到事件格就按提示升官、降官、得钱或受罚，遇到选择格就选一条路。途中可以攒钱、买道具、捐纳买官，也要提防弹劾、禁足和谋反风险。谁先走到终点成为<b>正一品·太师</b>，谁就获胜；组队模式则一人登顶，全队同胜。</p>
+    </section>
+
     <div class="sgt-rule-grid">
       <section class="sgt-rule-card">
         <h3><span class="sgt-rule-no">一</span>目标</h3>
-        <p>众人皆自起点 <b>从九品·太常寺奉礼郎</b> 出发，沿三环回字盘竞速。<b>最先抵达终点正一品·太师</b>者，位极人臣，对局即胜。</p>
+        <p>众人皆自起点 <b>从九品·太常寺奉礼郎</b> 出发，沿三环回字盘竞速。<b>最先抵达终点正一品·太师</b>者，位极人臣，对局即胜。（本游戏选本官作为游戏官阶）</p>
       </section>
       <section class="sgt-rule-card">
         <h3><span class="sgt-rule-no">二</span>行棋</h3>
-        <p>轮流掷一枚骰子（1–6 点），按点数沿盘面前进。落于何格，即结算该格事件。点击任意格子可<b>预览其内容与效果</b>。</p>
+        <p>轮流掷一枚骰子（1–6 点），按点数沿盘面前进。落于何格，即结算该格事件。点击任意格子可<b>预览其内容与效果</b>。<br>为求平衡，<b>同一人连掷三次同一点数后，下一次掷骰不再生成该点</b>（定数骰指定者除外）。</p>
       </section>
       <section class="sgt-rule-card">
         <h3><span class="sgt-rule-no">三</span>格子</h3>
-        <p><b class="r-office">官职格</b>锚定品阶（绿/绯/紫三章服）；<b>事件格</b>有进 N / 退 N / 升 N 阶 / 降 N 阶 / 困住 / <b>原位</b>驻留等；<b class="r-fortune">奇遇格</b>（金）天降际遇；<b class="r-rebel">谋反格</b>回起点但赠弹劾令 ×2。</p>
+        <p><b class="r-office">官职格</b>锚定品阶（绿/绯/紫三章服）；<b>事件格</b>有进 N / 退 N / 升 N 阶 / 降 N 阶 / 困住 / <b>原位</b>驻留 / 低阶<b>贪墨进财</b>等；<b class="r-fortune">奇遇格</b>（金）天降际遇；多处<b>抉择格</b>如叙事——每格 3–4 项抉择，<b>选项只述意态、不剧透结果，择而后知</b>，一念之间或进或退、或升或贬、或得财得械，结局各异；<b class="r-rebel">谋反格</b>投骰定数（单数回起点赠弹劾令 ×2，双数降 3 阶且困 1 回合）；高位<b class="r-rebel">谋反篡位格</b>投骰：<b>6 直接称帝获胜</b>、4 退 4 阶且困 1 回合、余点<b>贬回起点</b>。</p>
       </section>
       <section class="sgt-rule-card">
         <h3><span class="sgt-rule-no">四</span>品阶</h3>
@@ -150,11 +169,11 @@
       </section>
       <section class="sgt-rule-card">
         <h3><span class="sgt-rule-no">五</span>道具</h3>
-        <p><b class="r-tok">弹劾令</b>：掷骰前用，使一名对手降一品阶。<b class="r-ban">禁足令</b>：使一名对手下一回合不得掷骰。每人同时<b>最多持有 3 件</b>，对队友无效。</p>
+        <p><b class="r-tok">弹劾令</b>：掷骰前用，使一名对手降一品阶（<b>对正二品及以上者无效</b>）。<b class="r-ban">禁足令</b>：使一名对手下一回合不得掷骰。每人同时<b>最多持有 3 件</b>，对队友无效。<br><b class="r-tok">护身符</b>：被对手弹劾或禁足时弹窗询问，可选择消耗一枚以<b>免除该令</b>。商肆可购（620 缗，<b>购买不限、同时最多持有 2 枚</b>，独立计），盘上与奇遇亦可得。<br><b class="r-tok">定数骰</b>：掷骰前用，<b>指定下一掷必得之点数</b>。商肆可购（520 缗，<b>购买不限、同时最多持有 2 枚</b>，独立计），盘上亦有两格可拾得。</p>
       </section>
       <section class="sgt-rule-card">
         <h3><span class="sgt-rule-no">六</span>钱财·商肆</h3>
-        <p>每次升官获<b>钱财</b>（品阶越高越多），降官则相应扣减、下限为零。掷骰前可入<b>商肆</b>购弹劾令（600 缗）/ 禁足令（450 缗）；<b>一局至多购 3 件</b>，约中等品阶方买得起。</p>
+        <p>每次升官获<b>钱财</b>（品阶越高越多），降官则相应扣减、下限为零。掷骰前可入<b>商肆</b>购弹劾令（450 缗）/ 禁足令（600 缗）/ <b>定数骰（520 缗）</b> / <b>护身符（620 缗）</b>，<b>单局购买皆不设上限，唯受持有约束：弹劾令、禁足令共占一栏、同时不过 3 件；定数骰、护身符另计、各同时持有不过 2 枚</b>；亦可<b>捐纳买官</b>——<b>从八品 / 从七品上 / 从六品上 / 从五品上 / 从四品</b>五等，不同价、直升其阶。盘上散布三处<b>贪墨进财</b>格，越高位赃银越丰。</p>
       </section>
       <section class="sgt-rule-card">
         <h3><span class="sgt-rule-no">七</span>连锁与上限</h3>
@@ -226,7 +245,7 @@
         <div class="sgt-era-tag">本作 · 承</div>
         <div class="sgt-era-body">
           <h3>《大宋升官图》· 旧戏新裁</h3>
-          <p>本作取升官图"<b>掷骰竞官</b>"之核心与"<b>升黜无常</b>"之讽喻精神，落点<b>北宋官制</b>（寄禄官阶与职事官），自从九品·太常寺奉礼郎竞登正一品·太师；并重制为<b>三环回字盘</b>，增益事件、奇遇、谋反与<b>弹劾令 / 禁足令 / 商肆钱财</b>诸般机巧，使千年古戏，复见水墨新颜。</p>
+          <p>本作取升官图"<b>掷骰竞官</b>"之核心与"<b>升黜无常</b>"之讽喻精神，落点<b>北宋官制</b>（寄禄官阶），自从九品·太常寺奉礼郎竞登正一品·太师；并重制为<b>三环回字盘</b>，增益事件、奇遇、谋反与<b>弹劾令 / 禁足令 / 商肆钱财</b>诸般机巧，使千年古戏，复见水墨新颜。</p>
         </div>
       </div>
 
@@ -239,6 +258,46 @@
   </div>
 </div>
 
-<script src="src/shengguantu/shengguantu.js"></script>
+<!-- ============ 设置面板（音乐 / 音效） ============ -->
+<div class="sgt-sheet hidden" id="sgtSettings">
+  <div class="sgt-sheet-scroll sgt-set-scroll">
+    <button class="sgt-sheet-x" onclick="sgtCloseSheet('sgtSettings')">✕</button>
+    <div class="sgt-sheet-seal seal-set">音</div>
+    <h2 class="sgt-sheet-title">设 置</h2>
+    <p class="sgt-sheet-lead">案头焚香，弦歌相伴——可自择宫商，亦可静室无声。</p>
+
+    <div class="sgt-set-list">
+      <!-- 背景音乐 开关 -->
+      <div class="sgt-set-item">
+        <div class="sgt-set-info"><span class="sgt-set-name">背景音乐</span><span class="sgt-set-desc">循环播放助兴之乐</span></div>
+        <button class="sgt-switch" id="sgtSwMusic" role="switch" aria-checked="true" onclick="sgtToggleMusic()"><span class="sgt-switch-knob"></span></button>
+      </div>
+      <!-- 乐曲选择 -->
+      <div class="sgt-set-item sgt-set-item-col" id="sgtTrackRow">
+        <div class="sgt-set-info"><span class="sgt-set-name">乐曲选择</span><span class="sgt-set-desc">开启音乐后可切换曲目</span></div>
+        <div class="sgt-track-opts">
+          <label class="sgt-track-opt"><input type="radio" name="sgtTrack" value="1" checked onchange="sgtSetTrack(1)"><span>🎐 乐曲一 · 勾栏</span></label>
+          <label class="sgt-track-opt"><input type="radio" name="sgtTrack" value="2" onchange="sgtSetTrack(2)"><span>🏯 乐曲二 · 瓦舍</span></label>
+        </div>
+      </div>
+      <!-- 音效 开关 -->
+      <div class="sgt-set-item">
+        <div class="sgt-set-info"><span class="sgt-set-name">音效</span><span class="sgt-set-desc">掷骰等动作之声效</span></div>
+        <button class="sgt-switch" id="sgtSwSfx" role="switch" aria-checked="true" onclick="sgtToggleSfx()"><span class="sgt-switch-knob"></span></button>
+      </div>
+      <!-- 返回开局设置 -->
+      <button class="brush-btn ghost sgt-set-hall" onclick="sgtReturnSetupFromSettings()">↩ 返 回 开 局 设 置</button>
+    </div>
+
+    <div class="sgt-sheet-foot">
+      <button class="brush-btn" onclick="sgtCloseSheet('sgtSettings')">收 起 卷 轴</button>
+    </div>
+  </div>
+</div>
+
+<!-- 背景音乐（曲源置于 music 目录，随静态站点托管） -->
+<audio id="sgtBgm" loop preload="none"></audio>
+
+<script src="src/shengguantu/shengguantu.js?v=20260829"></script>
 </body>
 </html>

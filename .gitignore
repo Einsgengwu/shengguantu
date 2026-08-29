@@ -1,9 +1,6 @@
-# OS
 .DS_Store
 Thumbs.db
-
-# Editors
+desktop.ini
 .vscode/
 .idea/
-*.swp
-*.swo
+*.log

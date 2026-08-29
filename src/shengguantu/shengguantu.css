@@ -29,6 +29,16 @@
 .sgt-topbar .sgt-sub { color: var(--ink-3); font-size: 14px; letter-spacing: 2px; }
 .sgt-topbar-btns { display: flex; gap: 10px; flex-wrap: wrap; }
 
+.sgt-netbanner {
+  position: fixed; left: 50%; top: 8px; transform: translateX(-50%);
+  background: rgba(127, 86, 46, .94); color: #fff7e8; border: 1px solid rgba(255,255,255,.38);
+  border-radius: 999px; padding: 8px 14px; font-size: 13px; letter-spacing: 1px;
+  z-index: 80; box-shadow: 0 8px 20px rgba(52, 38, 22, .22); display: none;
+}
+.sgt-netbanner.show { display: block; }
+.sgt-netbanner.err { background: rgba(154, 43, 43, .94); }
+.sgt-netbanner.warn { background: rgba(141, 105, 45, .94); }
+
 /* 首页规则/文化入口 */
 .sgt-intro-btns {
   display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; margin: -6px 0 22px;
@@ -66,6 +76,8 @@
 .sgt-count-opts label:has(input:checked) {
   background: var(--vermilion); color: #f5ecd8; border-color: var(--vermilion-2);
 }
+.sgt-kind-opts label span { display: flex; flex-direction: column; gap: 3px; }
+.sgt-kind-opts small { font-weight: 400; opacity: .82; font-size: 11px; }
 .sgt-mode-row {
   display: flex; align-items: center; gap: 16px; padding: 7px 10px;
   border-bottom: 1px dashed var(--ink-3); font-size: 14px; color: var(--ink-2);
@@ -73,7 +85,66 @@
 .sgt-mode-row em { color: var(--ink-3); }
 .sgt-mode-label { display: flex; align-items: center; gap: 7px; min-width: 88px; }
 .sgt-mode-row label { display: flex; align-items: center; gap: 4px; cursor: pointer; }
-.sgt-setup-btns { display: flex; gap: 14px; margin-top: 24px; justify-content: center; }
+.sgt-setup-btns { display: flex; gap: 14px; margin-top: 24px; justify-content: center; flex-wrap: nowrap; }
+.sgt-setup-btns .brush-btn {
+  flex: 0 1 150px; min-width: 132px; padding: 12px 18px;
+  white-space: nowrap; word-break: keep-all; letter-spacing: 2px;
+  font-family: "Noto Serif SC", "Songti SC", "STSong", "SimSun", serif;
+  line-height: 1.2; text-align: center;
+}
+
+/* ---- 联机大厅 ---- */
+.sgt-net-input {
+  width: 100%; box-sizing: border-box; border: 1.5px solid var(--ink-3); border-radius: 7px;
+  background: rgba(255,255,255,.42); color: var(--ink); padding: 10px 12px;
+  font-size: 16px; line-height: 1.35; min-height: 44px; outline: none;
+}
+.sgt-net-input:focus { border-color: var(--vermilion); box-shadow: 0 0 0 3px rgba(150, 52, 40, .12); }
+.sgt-code-input { text-align: center; letter-spacing: 3px; font-weight: 700; text-transform: uppercase; font-size: 18px; }
+.sgt-lobby-actions { display: grid; grid-template-columns: 1fr auto 1fr; gap: 14px; align-items: stretch; }
+.sgt-lobby-card {
+  border: 1px solid var(--ink-3); border-left: 3px solid var(--vermilion);
+  border-radius: 8px; padding: 13px; background: rgba(255,255,255,.26); min-width: 0;
+}
+.sgt-lobby-card h4 { color: var(--vermilion-2); margin: 0 0 8px; letter-spacing: 2px; }
+.sgt-lobby-hint { font-size: 12.5px; line-height: 1.65; color: var(--ink-3); margin: 4px 0 10px; }
+.sgt-lobby-or { align-self: center; color: var(--ink-3); font-size: 13px; }
+.sgt-join-row { display: grid; grid-template-columns: 1fr; gap: 8px; align-items: stretch; }
+.sgt-join-row .sgt-net-input { min-width: 0; }
+.sgt-join-row .brush-btn, .sgt-lobby-card > .brush-btn { min-height: 40px; white-space: nowrap; }
+.sgt-join-row .brush-btn { width: 100%; min-width: 0; padding: 9px 14px; }
+.sgt-lobby-card > .brush-btn { width: 100%; padding: 9px 14px; }
+.sgt-room-code-wrap { text-align: center; margin-bottom: 12px; }
+.sgt-room-code-label { font-size: 13px; letter-spacing: 6px; color: var(--ink-3); }
+.sgt-room-code { font-size: 42px; letter-spacing: 8px; color: var(--vermilion-2); font-weight: 800; font-family: "ZCOOL XiaoWei", serif; }
+.sgt-copy-btn { font-size: 13px; }
+.sgt-room-members-wrap { max-width: 420px; margin: 0 auto 10px; }
+.sgt-room-members-hd { font-size: 13px; color: var(--ink-3); letter-spacing: 2px; margin-bottom: 6px; text-align: center; }
+.sgt-room-members { display: flex; flex-direction: column; gap: 6px; }
+.sgt-room-member {
+  display: flex; align-items: center; gap: 8px; border: 1px dashed var(--ink-3); border-radius: 7px;
+  background: rgba(255,255,255,.24); padding: 7px 9px; font-size: 13px;
+}
+.sgt-room-dot { width: 9px; height: 9px; border-radius: 50%; flex: none; }
+.sgt-room-dot.on { background: #3f9d57; box-shadow: 0 0 0 2px rgba(63,157,87,.2); }
+.sgt-room-dot.off { background: #b6a98e; }
+.sgt-room-seat { color: var(--ink-3); font-size: 12px; }
+.sgt-room-name { flex: 1; color: var(--ink); }
+.sgt-room-host { font-size: 11px; color: #fff; background: var(--vermilion-2); border-radius: 5px; padding: 1px 7px; }
+.sgt-room-kick {
+  border: 1px solid #b0383a; color: #b0383a; background: transparent; border-radius: 5px;
+  padding: 2px 7px; cursor: pointer; font-size: 12px;
+}
+.sgt-room-kick:hover { background: #b0383a; color: #fff; }
+.sgt-host-config {
+  margin-top: 14px; border-top: 1px dashed var(--ink-3); border-bottom: 1px dashed var(--ink-3);
+  padding: 14px 0 8px;
+}
+.sgt-seat-preview {
+  font-size: 12.5px; line-height: 1.8; color: var(--ink-2); background: rgba(255,255,255,.24);
+  border-radius: 7px; padding: 9px 11px; margin-top: 6px;
+}
+.sgt-guest-wait { color: var(--ink-3); align-self: center; font-size: 13px; letter-spacing: 2px; }
 
 /* 2v2 说明 */
 .sgt-team-note {
@@ -105,11 +176,13 @@
   width: 100%; aspect-ratio: 15 / 11;
   background: var(--paper-2);
   border: 3px solid var(--ink); border-radius: 8px;
-  padding: 6px; gap: 2px; box-shadow: 6px 8px 0 var(--shadow);
+  padding: 5px; gap: 0; box-shadow: 6px 8px 0 var(--shadow);
 }
+/* 迷宫廊道：格间无缝（gap:0），仅留极淡步格分隔线；行进方向的边留空、其余三边由 .w-* 描墙，
+   廊道由此连成一条自 #0 盘旋直通 #119 的连通走廊 */
 .sgt-cell {
   position: relative; overflow: visible;
-  border: 1px solid rgba(110, 101, 85, 0.45); border-radius: 4px;
+  border: 1px solid rgba(120, 110, 90, 0.16); border-radius: 0;
   background: var(--paper);
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   font-size: 9px; line-height: 1.1; text-align: center; cursor: pointer;
@@ -117,6 +190,13 @@
 }
 .sgt-cell:hover { box-shadow: 0 0 0 2px var(--gold); z-index: 6; }
 .sgt-cell.active { box-shadow: 0 0 0 2px var(--vermilion), 0 0 10px var(--vermilion); z-index: 7; }
+
+/* 迷宫廊道·外墙：统一朱砂红、统一 3px 厚度（仅描朝外那侧，全盘单层不重叠）*/
+.sgt-cell.w-t { border-top: 3px solid var(--vermilion); }
+.sgt-cell.w-r { border-right: 3px solid var(--vermilion); }
+.sgt-cell.w-b { border-bottom: 3px solid var(--vermilion); }
+.sgt-cell.w-l { border-left: 3px solid var(--vermilion); }
+
 .sgt-c-no { font-size: 8.5px; color: var(--ink-3); opacity: .7; }
 .sgt-c-rank { font-weight: 700; font-size: 10px; }
 .sgt-c-name { font-size: 8px; color: var(--ink-3); line-height: 1.05; }
@@ -134,6 +214,10 @@
 .b-ban    { background: #3a5a9c; }   /* 得禁足令（保留色） */
 .b-fortune{ background: var(--gold); color: #5a3d10; box-shadow: 0 0 0 1px var(--gold); }
 .b-rebel  { background: #7a1414; color: #ffd9d0; box-shadow: 0 0 0 1px #7a1414; }
+.b-coup   { background: #5a1a6a; color: #f3d9ff; box-shadow: 0 0 0 1px #5a1a6a; }   /* 谋反篡位（保留色） */
+.b-graft  { background: #9a7b2a; color: #fff6df; }   /* 贪墨进财·铜钱色（保留色） */
+.b-dice   { background: #2f7d6b; color: #eafff7; box-shadow: 0 0 0 1px #2f7d6b; }   /* 定数骰·得道具（保留色） */
+.b-guard  { background: #4f6f7d; color: #eef6f5; box-shadow: 0 0 0 1px #4f6f7d; }   /* 护身符·抵免道具（保留色） */
 
 /* 官职格章服底色 */
 .sgt-office.robe-green  { background: #e3ecdc; }
@@ -150,6 +234,8 @@
 .sgt-event { background: var(--paper); }
 .sgt-rebel { background: #2a1414; border-color: #7a1414; }
 .sgt-rebel .sgt-c-no { color: #c98; }
+.sgt-coup { background: #1d1428; border-color: #6a2a8a; }
+.sgt-coup .sgt-c-no { color: #c9a6d9; }
 
 .sgt-cell.flash-good { animation: sgtFlashGood .6s; }
 .sgt-cell.flash-bad  { animation: sgtFlashBad .6s; }
@@ -195,6 +281,20 @@
   border-radius: 7px; padding: 4px 8px;
 }
 .sgt-center-event.show { opacity: 1; animation: sgtEvPulse 1s ease-out; }
+/* 手机端事件面板（桌面端隐藏——桌面在棋盘中央已能完整显示）；前缀标明当前玩家与品阶 */
+.sgt-event-panel { display: none; }
+.sgt-event-echo { font-size: 14px; line-height: 1.65; color: var(--ink-2); }
+.sgt-event-echo .sgt-ev-head { font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+.sgt-event-echo .sgt-ev-msgs { color: var(--ink-2); }
+.sgt-echo-empty { color: var(--ink-3); font-size: 13px; }
+.sgt-event-echo.flash { animation: sgtEvPulse 1s ease-out; border-radius: 7px; }
+.sgt-echo-who {
+  display: flex; align-items: center; gap: 7px; flex-wrap: wrap;
+  margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px dotted rgba(110,101,85,.35);
+  font-size: 13.5px;
+}
+.sgt-echo-who .sgt-dot { width: 20px; height: 20px; font-size: 12px; }
+.sgt-echo-rank { font-size: 12.5px; font-weight: 600; }
 /* v1.2：事件刷新时高亮脉冲，提示「此处有变化」 */
 @keyframes sgtEvPulse {
   0%   { background: rgba(176,141,60,0); box-shadow: none; }
@@ -213,6 +313,12 @@
 .sgt-panel h3 {
   font-size: 15px; color: var(--vermilion-2); letter-spacing: 3px;
   margin-bottom: 10px; border-bottom: 1px solid var(--ink-3); padding-bottom: 6px;
+}
+.sgt-panel-title-row {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+}
+.sgt-room-badge {
+  color: var(--ink-3); font-size: 12px; font-weight: 400; letter-spacing: 0; white-space: nowrap;
 }
 .sgt-turn-banner {
   text-align: center; font-size: 14.5px; color: var(--ink); padding: 7px;
@@ -263,8 +369,79 @@
   border-radius: 6px; padding: 8px 10px; text-align: center;
 }
 .sgt-shop-hd b { color: var(--vermilion-2); }
+.sgt-shop-sub { margin-top: 8px; font-size: 12px; letter-spacing: 1px; background: rgba(90,26,106,.1); border-color: #6a4a8a; }
+.sgt-shop-note { font-size: 12px; color: var(--ink-3); text-align: center; padding: 8px 6px; font-style: italic; }
+.sgt-controls .sgt-buy-office { border-color: #8a6a3a; }
+.sgt-controls .sgt-buy-office small { color: #8a6a3a; }
 .sgt-controls .brush-btn:disabled {
   opacity: .4; cursor: not-allowed; box-shadow: none; transform: none;
+}
+
+/* 游戏引导 */
+.sgt-play.sgt-guide-mode .sgt-cell { opacity: .46; transition: opacity .18s ease, transform .18s ease, box-shadow .18s ease; }
+.sgt-play.sgt-guide-mode .sgt-cell.sgt-guide-focus-cell {
+  opacity: 1; z-index: 4; transform: scale(1.06);
+  box-shadow: 0 0 0 3px rgba(176,141,60,.85), 0 0 18px rgba(176,141,60,.55);
+}
+.sgt-play.sgt-guide-mode .sgt-center.sgt-guide-focus-panel,
+.sgt-play.sgt-guide-mode .sgt-panel.sgt-guide-focus-panel {
+  position: relative; z-index: 5;
+  box-shadow: 0 0 0 3px rgba(176,141,60,.65), 0 0 22px rgba(176,141,60,.38), 3px 4px 0 var(--shadow);
+}
+.sgt-play.sgt-guide-mode .sgt-center { pointer-events: auto; }
+.sgt-play.sgt-guide-mode .sgt-center {
+  justify-content: stretch; padding: 7px 8px; overflow: visible;
+}
+.sgt-play.sgt-guide-mode .sgt-center-seal,
+.sgt-play.sgt-guide-mode .sgt-center-title,
+.sgt-play.sgt-guide-mode .sgt-center-sub,
+.sgt-play.sgt-guide-mode .sgt-dice-stage {
+  display: none;
+}
+.sgt-play.sgt-guide-mode .sgt-center-event {
+  width: 100%; max-width: 100%; min-height: 100%; margin-top: 0; padding: 0;
+  display: flex; align-items: stretch; justify-content: center;
+}
+.sgt-guide-card {
+  position: relative; display: flex; flex-direction: column; justify-content: center; gap: 8px;
+  background: rgba(250,243,216,.68); border: 1px dashed var(--gold);
+  border-radius: 7px; padding: 10px 44px; width: 100%; min-height: 100%;
+}
+.sgt-guide-kicker { color: var(--ink-3); font-size: 12px; letter-spacing: 2px; text-align: center; }
+.sgt-guide-title { color: var(--vermilion-2); font-size: 15px; font-weight: 700; text-align: center; letter-spacing: 2px; }
+.sgt-guide-body { color: var(--ink-2); font-size: 12.5px; line-height: 1.55; }
+.sgt-guide-short { display: none; }
+.sgt-guide-example {
+  color: var(--ink); font-size: 12.5px; line-height: 1.55;
+  background: rgba(255,255,255,.28); border-radius: 6px; padding: 7px 8px;
+}
+.sgt-guide-samples { display: grid; gap: 5px; }
+.sgt-guide-samples-compact { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.sgt-guide-sample {
+  border: 1px solid var(--ink-3); border-radius: 6px; background: rgba(255,255,255,.3);
+  padding: 5px 8px; font-size: 12px; color: var(--ink-2); line-height: 1.45;
+}
+.sgt-guide-samples-compact .sgt-guide-sample {
+  display: flex; align-items: center; justify-content: center; min-height: 30px;
+  padding: 5px 6px; font-size: 11.5px; line-height: 1.2; text-align: center; white-space: nowrap;
+}
+.sgt-guide-arrow {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 34px; min-height: 62px; border: 1px solid var(--ink-3);
+  background: rgba(241,232,212,.9); color: var(--vermilion-2);
+  border-radius: 999px; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; box-shadow: 2px 2px 0 var(--shadow);
+}
+.sgt-guide-arrow:hover { background: rgba(250,243,216,.98); transform: translateY(-52%); }
+.sgt-guide-arrow span { font-size: 0; line-height: 1; }
+.sgt-guide-arrow em { display: none; }
+.sgt-guide-prev span::before { content: "◀"; font-size: 22px; }
+.sgt-guide-next span::before { content: "▶"; font-size: 22px; }
+.sgt-guide-prev { left: 5px; }
+.sgt-guide-next { right: 5px; }
+.sgt-guide-return {
+  align-self: center; min-height: 30px; padding: 6px 11px; margin-top: 0;
+  letter-spacing: 1px; font-size: 12px;
 }
 
 .sgt-log { max-height: 220px; overflow-y: auto; font-size: 12.5px; line-height: 1.6; }
@@ -300,7 +477,23 @@
   font-family: "Ma Shan Zheng", serif; font-size: 40px; box-shadow: 4px 4px 0 var(--ink-3);
 }
 .sgt-vic-scroll h2 { font-family: "ZCOOL XiaoWei", serif; font-size: 26px; letter-spacing: 4px; color: var(--vermilion-2); margin-bottom: 4px; }
+.sgt-vic-sub { font-size: 13px; letter-spacing: 2px; color: var(--ink-3); margin-bottom: 12px; }
 .sgt-vic-name { font-size: 22px; font-weight: 700; margin-bottom: 18px; }
+
+/* 谋反篡位·登基称帝 结算页（金紫帝王配色） */
+.sgt-victory.usurp .sgt-vic-scroll {
+  border-color: #d4af37;
+  background: linear-gradient(170deg, #2a1838 0%, #3a1820 100%);
+  box-shadow: 0 10px 48px rgba(0,0,0,.65), 0 0 0 1px #d4af37 inset;
+}
+.sgt-victory.usurp .sgt-vic-seal {
+  background: linear-gradient(150deg, #d4af37, #b8860b); color: #2a1838;
+  box-shadow: 4px 4px 0 #5a1a6a;
+}
+.sgt-victory.usurp .sgt-vic-scroll h2 { color: #f0d27a; text-shadow: 0 0 12px rgba(212,175,55,.5); }
+.sgt-victory.usurp .sgt-vic-sub { color: #d9c79a; }
+.sgt-victory.usurp .sgt-vic-name { color: #f5ecd8; }
+.sgt-victory.usurp .sgt-vic-row { color: #e8dcc4; border-bottom-color: rgba(212,175,55,.3); }
 .sgt-vic-list { margin-bottom: 22px; }
 .sgt-vic-row { display: flex; justify-content: space-between; gap: 24px; padding: 5px 0; font-size: 15px; border-bottom: 1px dashed var(--ink-3); }
 .sgt-vic-btns { display: flex; gap: 14px; justify-content: center; }
@@ -322,7 +515,15 @@
   .sgt-topbar .sgt-sub { display: none; }
 
   .sgt-setup { padding: 22px 18px; margin-top: 2vh; }
-  .sgt-setup-btns { position: sticky; bottom: 0; }
+  .sgt-setup-btns { position: sticky; bottom: 0; flex-direction: column; align-items: stretch; }
+  .sgt-setup-btns .brush-btn { width: 100%; flex: none; min-width: 0; min-height: 46px; }
+  .sgt-lobby-actions { grid-template-columns: 1fr; gap: 10px; }
+  .sgt-lobby-or { text-align: center; }
+  .sgt-join-row { grid-template-columns: 1fr; }
+  .sgt-net-input { min-height: 48px; font-size: 16px; }
+  .sgt-code-input { font-size: 20px; letter-spacing: 3px; padding-left: 10px; padding-right: 10px; }
+  .sgt-join-row .brush-btn, .sgt-lobby-card > .brush-btn { width: 100%; min-height: 46px; }
+  .sgt-room-code { font-size: 34px; letter-spacing: 6px; }
 
   .sgt-grid { padding: 4px; gap: 1.5px; border-width: 2px; }
   .sgt-cell { font-size: 7.5px; padding: 1px; border-radius: 3px; }
@@ -333,11 +534,53 @@
   .sgt-center-title { letter-spacing: 3px; }
   .sgt-center-seal { width: 34px; height: 34px; font-size: 20px; }
   .sgt-center-sub { display: none; }
+  /* 棋盘中央狭小、长事件会被裁切：手机端隐藏盘内事件文字，改由下方"当前事件"面板完整呈现 */
+  .sgt-center-event { display: none; }
+  .sgt-event-panel { display: block; }
+  .sgt-event-panel h3 { margin-bottom: 6px; }
+  .sgt-play.sgt-guide-mode .sgt-center {
+    justify-content: center !important; padding: 10px !important; overflow: hidden !important; pointer-events: none !important;
+  }
+  .sgt-play.sgt-guide-mode .sgt-center-seal {
+    display: flex !important; width: 34px; height: 34px; font-size: 20px; margin-bottom: 6px;
+  }
+  .sgt-play.sgt-guide-mode .sgt-center-title {
+    display: block !important; letter-spacing: 3px;
+  }
+  .sgt-play.sgt-guide-mode .sgt-dice-stage {
+    display: block !important;
+  }
+  .sgt-play.sgt-guide-mode .sgt-center-event {
+    display: none !important;
+  }
+  .sgt-guide-card {
+    gap: 7px; padding: 10px 38px; border-radius: 7px;
+    background: rgba(250,243,216,.78);
+  }
+  .sgt-guide-kicker { font-size: 11px; letter-spacing: 1px; }
+  .sgt-guide-title { font-size: 15px; letter-spacing: 1px; }
+  .sgt-guide-body { font-size: 12.5px; line-height: 1.55; }
+  .sgt-guide-full { display: none; }
+  .sgt-guide-short { display: inline; }
+  .sgt-guide-example { font-size: 12px; padding: 6px 7px; }
+  .sgt-guide-samples { gap: 5px; }
+  .sgt-guide-samples-compact { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sgt-guide-sample { font-size: 12px; padding: 6px 7px; }
+  .sgt-guide-samples-compact .sgt-guide-sample { font-size: 11px; padding: 5px 4px; }
+  .sgt-guide-arrow {
+    width: 31px; min-height: 52px;
+  }
+  .sgt-guide-prev span::before,
+  .sgt-guide-next span::before { font-size: 20px; }
+  .sgt-guide-arrow em { font-size: 10px; }
+  .sgt-guide-return {
+    width: 100%; min-height: 34px; font-size: 12px; letter-spacing: 1px; padding: 6px 8px;
+  }
 
   .sgt-pawn { font-size: 7px; border-width: .5px; }
 
   .sgt-panel { padding: 10px 11px; }
-  .sgt-log { max-height: 150px; }
+  .sgt-log { max-height: 34vh; }
   .sgt-stand-office-row { padding-left: 0; }
   .sgt-toast { bottom: 16px; }
   .sgt-vic-scroll { padding: 26px 22px; }
@@ -412,6 +655,7 @@
   background: rgba(255,255,255,.32); border: 1px solid var(--ink-3);
   border-left: 3px solid var(--gold); border-radius: 8px; padding: 13px 15px;
 }
+.sgt-rule-simple { margin-bottom: 14px; }
 .sgt-rule-card h3 {
   display: flex; align-items: center; gap: 9px; font-size: 16px;
   color: var(--vermilion-2); letter-spacing: 2px; margin-bottom: 6px;
@@ -472,4 +716,87 @@
   .sgt-sheet-scroll { padding: 30px 18px 24px; }
   .sgt-rule-grid { grid-template-columns: 1fr; }
   .sgt-sheet-title { letter-spacing: 3px; }
+}
+
+/* ============================================================
+   设置面板 — 音乐 / 音效（v2.4）
+   ============================================================ */
+/* 顶栏设置按钮：桌面"♪ 设置"，窄屏仅留音符 */
+.sgt-set-btn { display: inline-flex; align-items: center; gap: 6px; }
+.sgt-set-gear { display: inline-block; font-size: 16px; line-height: 1; transition: transform .4s ease; }
+.sgt-set-btn:hover .sgt-set-gear { transform: translateY(-1px) scale(1.08); }
+
+.sgt-sheet-seal.seal-set { background: #3f6d7a; color: #eef6f5; }
+.sgt-set-scroll { max-width: 560px; }
+
+.sgt-set-list { display: flex; flex-direction: column; gap: 14px; margin: 4px 0 6px; }
+.sgt-set-item {
+  display: flex; align-items: center; justify-content: space-between; gap: 14px;
+  background: rgba(255,255,255,.34); border: 1px solid var(--ink-3);
+  border-left: 3px solid var(--gold); border-radius: 9px; padding: 13px 16px;
+}
+.sgt-set-item-col { flex-direction: column; align-items: stretch; gap: 11px; }
+.sgt-set-info { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+.sgt-set-name { font-size: 15.5px; color: var(--ink); letter-spacing: 1px; font-weight: 700; }
+.sgt-set-desc { font-size: 12.5px; color: var(--ink-3); }
+
+/* 拨动开关 */
+.sgt-switch {
+  flex: 0 0 auto; position: relative; width: 54px; height: 30px; padding: 0;
+  border: 1.5px solid var(--ink-3); border-radius: 999px; cursor: pointer;
+  background: rgba(120,110,92,.22); transition: background .22s, border-color .22s;
+}
+.sgt-switch-knob {
+  position: absolute; top: 2px; left: 2px; width: 24px; height: 24px; border-radius: 50%;
+  background: var(--paper); box-shadow: 1px 1px 3px rgba(0,0,0,.35);
+  transition: transform .22s ease;
+}
+.sgt-switch.on { background: var(--vermilion); border-color: var(--vermilion-2); }
+.sgt-switch.on .sgt-switch-knob { transform: translateX(24px); background: #fff; }
+.sgt-switch:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+
+/* 乐曲选择 */
+.sgt-track-opts { display: flex; gap: 10px; flex-wrap: wrap; }
+.sgt-track-opt {
+  flex: 1 1 0; min-width: 130px; text-align: center; cursor: pointer;
+  padding: 9px 12px; border: 1.5px solid var(--ink-3); border-radius: 7px;
+  color: var(--ink-2); font-size: 13.5px; letter-spacing: 1px; transition: all .15s;
+}
+.sgt-track-opt input { display: none; }
+.sgt-track-opt:has(input:checked) {
+  background: var(--gold); color: #3a2a08; border-color: #b08d3c; font-weight: 700;
+}
+.sgt-set-off { opacity: .45; }
+.sgt-set-off .sgt-track-opts { pointer-events: none; }
+
+/* 含"回"字的按钮一律用清晰完整的宋体渲染——
+   避免 ZCOOL/马善政 笔锋字体把"回"的内外框填成实心墨块（仅本游戏页生效，不动全站书法美术字） */
+.sgt-hui-btn {
+  font-family: "Noto Serif SC", "Songti SC", "STSong", "SimSun", serif;
+}
+/* 定数骰 · 择点数面板 */
+.sgt-dice-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin: 4px 0 2px;
+}
+.sgt-dice-pick {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 1px; padding: 8px 4px; line-height: 1;
+}
+.sgt-dice-pick { font-size: 22px; }
+.sgt-dice-pick span { font-size: 11px; letter-spacing: 1px;
+  font-family: "Noto Serif SC", "Songti SC", "STSong", "SimSun", serif; }
+
+/* 返回开局设置（设置面板内，音效之下） */
+.sgt-set-hall {
+  width: 100%; margin-top: 6px; letter-spacing: 3px;
+  font-family: "Noto Serif SC", "Songti SC", "STSong", "SimSun", serif;
+}
+
+@media (max-width: 640px) {
+  .sgt-set-label { display: none; }           /* 窄屏仅留音符 */
+  .sgt-set-btn { padding-left: 10px; padding-right: 10px; }
+  .sgt-set-gear { font-size: 17px; }
+  .sgt-set-scroll { max-width: 100%; }
+  .sgt-set-item { padding: 12px 13px; }
+  .sgt-track-opt { min-width: 0; }
 }
