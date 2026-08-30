@@ -4,7 +4,7 @@
 
 🎮 **[网页试玩](https://einsgengwu.github.io/shengguantu/)**
 
-🎮 **[网页试玩](https://cad-diamonds-motorcycles-guards.trycloudflare.com/shengguantu.html)**
+🎮 **[联机试玩](https://cad-diamonds-motorcycles-guards.trycloudflare.com/shengguantu.html)**
 
 ## 玩法简介
 
