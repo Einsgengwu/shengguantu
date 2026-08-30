@@ -4,7 +4,6 @@
 
 🎮 **[网页试玩](https://einsgengwu.github.io/shengguantu/)**
 
-🎮 **[联机试玩](https://cad-diamonds-motorcycles-guards.trycloudflare.com/shengguantu.html)**
 ## 玩法简介
 
 - 1–4 人本地对局，支持 AI 托管和多人轮流操作
@@ -58,4 +57,4 @@ music/                             背景音乐
 
 ## 许可
 
-本项目采用 [MIT License](LICENSE) 开源。
+本项目源代码公开，并采用 [PolyForm Noncommercial License 1.0.0](LICENSE) 授权，仅允许非商业用途下的使用、修改与分发。任何商业用途均须事先取得版权所有者的书面授权。
