@@ -4,6 +4,8 @@
 
 🎮 **[网页试玩](https://einsgengwu.github.io/shengguantu/)**
 
+🎮 **[网页试玩](https://cad-diamonds-motorcycles-guards.trycloudflare.com/shengguantu.html)**
+
 ## 玩法简介
 
 - 1–4 人本地对局，支持 AI 托管和多人轮流操作
